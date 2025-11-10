@@ -3,6 +3,12 @@ from .base import BaseModel
 from sqlalchemy.orm import validates, relationship
 
 class Category(BaseModel):
+    """
+    Database model representing a game category.
+    
+    Categories are used to classify games into groups (e.g., Action, RPG, Strategy).
+    Each category can have multiple games associated with it.
+    """
     __tablename__ = 'categories'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -14,16 +20,24 @@ class Category(BaseModel):
     
     @validates('name')
     def validate_name(self, key, name):
+        """Validate that the category name meets minimum length requirements."""
         return self.validate_string_length('Category name', name, min_length=2)
         
     @validates('description')
     def validate_description(self, key, description):
+        """Validate that the category description meets minimum length requirements."""
         return self.validate_string_length('Description', description, min_length=10, allow_none=True)
     
     def __repr__(self):
         return f'<Category {self.name}>'
         
     def to_dict(self):
+        """
+        Convert the category model to a dictionary representation.
+        
+        Returns:
+            dict: Dictionary containing category ID, name, description, and game count
+        """
         return {
             'id': self.id,
             'name': self.name,
