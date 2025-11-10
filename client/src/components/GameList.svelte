@@ -13,6 +13,14 @@
     let loading = true;
     let error: string | null = null;
 
+    /**
+     * Fetches the list of games from the API.
+     * 
+     * Retrieves all games from the /api/games endpoint and updates the
+     * component state with the results or error information.
+     * 
+     * @returns {Promise<void>}
+     */
     const fetchGames = async () => {
         loading = true;
         try {

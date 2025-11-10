@@ -3,6 +3,12 @@ from .base import BaseModel
 from sqlalchemy.orm import validates, relationship
 
 class Game(BaseModel):
+    """
+    Database model representing a game in the crowdfunding platform.
+    
+    Games are the primary entities being crowdfunded. Each game is associated
+    with a publisher and a category, and has ratings and descriptions.
+    """
     __tablename__ = 'games'
     
     id = db.Column(db.Integer, primary_key=True)
@@ -20,10 +26,12 @@ class Game(BaseModel):
     
     @validates('title')
     def validate_name(self, key, name):
+        """Validate that the game title meets minimum length requirements."""
         return self.validate_string_length('Game title', name, min_length=2)
     
     @validates('description')
     def validate_description(self, key, description):
+        """Validate that the game description meets minimum length requirements."""
         if description is not None:
             return self.validate_string_length('Description', description, min_length=10, allow_none=True)
         return description
@@ -32,6 +40,13 @@ class Game(BaseModel):
         return f'<Game {self.title}, ID: {self.id}>'
 
     def to_dict(self):
+        """
+        Convert the game model to a dictionary representation.
+        
+        Returns:
+            dict: Dictionary containing game details including title, description,
+                 publisher info, category info, and star rating
+        """
         return {
             'id': self.id,
             'title': self.title,
