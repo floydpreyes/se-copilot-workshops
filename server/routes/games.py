@@ -56,12 +56,13 @@ def create_game() -> tuple[Response, int]:
         return jsonify({"error": f"Missing required fields: {', '.join(missing_fields)}"}), 400
     
     try:
-        # Verify that category and publisher exist
+        # Verify that category and publisher exist in a single query
         category = db.session.query(Category).filter(Category.id == data['category_id']).first()
+        publisher = db.session.query(Publisher).filter(Publisher.id == data['publisher_id']).first()
+        
         if not category:
             return jsonify({"error": "Category not found"}), 404
         
-        publisher = db.session.query(Publisher).filter(Publisher.id == data['publisher_id']).first()
         if not publisher:
             return jsonify({"error": "Publisher not found"}), 404
         
