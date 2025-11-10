@@ -83,9 +83,11 @@ def create_game() -> tuple[Response, int]:
         
     except ValueError as e:
         db.session.rollback()
+        # ValueError is raised by our own validation logic, safe to expose
         return jsonify({"error": str(e)}), 400
-    except Exception as e:
+    except Exception:
         db.session.rollback()
+        # Don't expose internal error details
         return jsonify({"error": "Failed to create game"}), 500
 
 @games_bp.route('/api/games/<int:id>', methods=['PUT'])
@@ -134,9 +136,11 @@ def update_game(id: int) -> tuple[Response, int]:
         
     except ValueError as e:
         db.session.rollback()
+        # ValueError is raised by our own validation logic, safe to expose
         return jsonify({"error": str(e)}), 400
-    except Exception as e:
+    except Exception:
         db.session.rollback()
+        # Don't expose internal error details
         return jsonify({"error": "Failed to update game"}), 500
 
 @games_bp.route('/api/games/<int:id>', methods=['DELETE'])
@@ -153,6 +157,7 @@ def delete_game(id: int) -> tuple[Response, int]:
         
         return jsonify({"message": "Game deleted successfully"}), 200
         
-    except Exception as e:
+    except Exception:
         db.session.rollback()
+        # Don't expose internal error details
         return jsonify({"error": "Failed to delete game"}), 500
